@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="Beauty_Salon.Controls.CommonHeader"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Beauty_Salon.Controls"
+             xmlns:viewModel="clr-namespace:Beauty_Salon.ViewModels"
+             mc:Ignorable="d"
+             d:DesignWidth="800" Height="89">
+
+    <DockPanel LastChildFill="True" Background="SeaShell"  Height="88" VerticalAlignment="Top">
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10">
+            <Button x:Name="mainBtn" Content="Главная" Width="100" Height="40" Margin="5" Style="{StaticResource AnimatedButtonStyle}" Click="Main_Click"/>
+            <Button x:Name="reservBtn" Content="Запись" Width="100" Height="40" Margin="5" Style="{StaticResource AnimatedButtonStyle}" Click="Reservation_Click"/>
+            <Button x:Name="HistoryBtn" Content="История" Width="100" Height="40" Margin="5" Style="{StaticResource AnimatedButtonStyle}" Click="History_Click"/>
+            <Button x:Name="favoriteBtn" Content="Избранное" Width="100" Height="40" Margin="5" Style="{StaticResource AnimatedButtonStyle}" Click="Favorite_Click"/>
+            <Button x:Name="settingsBtn" Content="Настройки" Width="100" Height="40" Margin="5" Style="{StaticResource AnimatedButtonStyle}" Click="Settings_Click"/>
+        </StackPanel>
+
+
+        <Ellipse HorizontalAlignment="Right" Height="75" Margin="0,10,20,0" Stroke="Black"
+                 StrokeThickness="2" VerticalAlignment="Top" Width="75"
+                 MouseLeftButtonDown="OpenProfile_Click">
+            <Ellipse.Fill>
+                <ImageBrush ImageSource="{Binding Image}"/>
+            </Ellipse.Fill>
+        </Ellipse>
+    </DockPanel>
+</UserControl>

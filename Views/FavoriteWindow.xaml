@@ -1,0 +1,80 @@
+﻿<Window x:Class="Beauty_Salon.Views.FavoriteWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.expression.blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Beauty_Salon.Views"
+        xmlns:viewModel="clr-namespace:Beauty_Salon.ViewModels"
+        mc:Ignorable="d"
+        Title="Избранное" Height="438" Width="800" WindowStartupLocation="CenterScreen">
+
+    <Window.DataContext>
+        <viewModel:CategoryViewModel />
+    </Window.DataContext>
+
+    <Window.Background>
+        <ImageBrush ImageSource="D:\BSTU3_1\CourseProject\Beauty_Salon\Beauty_Salon\Views\pic\favorite.png" Stretch="UniformToFill"/>
+    </Window.Background>
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Text="{Binding FavoriteEmptyText}" 
+                FontSize="34" FontWeight="Bold" 
+                Foreground="#333333" HorizontalAlignment="Center"
+               Margin="0,150,0,20"
+               Visibility="{Binding IsFavoriteVisible, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=False}" />
+
+        <!-- ItemsControl for displaying favorite services -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="0">
+            <ItemsControl ItemsSource="{Binding PaginatedFavoriteServices}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Center" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button BorderThickness="0" Background="Transparent" 
+                                Command="{Binding DataContext.ServiceCardOpenCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding}" Margin="0,10" Click="CloseWindow_Click">
+                            <Border BorderBrush="Gray" BorderThickness="2" CornerRadius="15" Padding="10" Margin="10" Background="White">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <!-- Circular Image -->
+                                    <Ellipse Width="100" Height="100" Stroke="Gray" StrokeThickness="2" Margin="20,0,20,0">
+                                        <Ellipse.Fill>
+                                            <ImageBrush ImageSource="{Binding ImagePath}" />
+                                        </Ellipse.Fill>
+                                    </Ellipse>
+
+                                    <!-- Service Name -->
+                                    <TextBlock Text="{Binding Service_Name}" TextWrapping="Wrap" 
+                                        FontWeight="Bold" FontSize="22" Height="Auto" VerticalAlignment="Center" 
+                                        MaxWidth="180" MinWidth="180"/>
+                                </StackPanel>
+
+                            </Border>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <!-- Pagination Buttons -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <Button Content="Назад" Command="{Binding PreviousFavoritePageCommand}" 
+                    Margin="10" Width="120" Height="40" FontSize="16" Background="Gray"
+                    Style="{StaticResource AnimatedButtonStyle}"/>
+            <TextBlock Text="{Binding FavoriteCurrentPage}" VerticalAlignment="Center" Margin="20,0" FontSize="18" />
+            <Button Content="Вперед" Command="{Binding NextFavoritePageCommand}"
+                    Margin="10" Width="120" Height="40" FontSize="16" Background="Gray"
+                    Style="{StaticResource AnimatedButtonStyle}"/>
+        </StackPanel>
+    </Grid>
+</Window>

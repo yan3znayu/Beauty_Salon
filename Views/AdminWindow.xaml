@@ -1,0 +1,435 @@
+﻿<Window x:Class="Beauty_Salon.Views.AdminWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Beauty_Salon.ViewModels"
+        xmlns:convert="clr-namespace:Beauty_Salon.Resources"
+        Title="Панель администратора" Height="846" Width="800" WindowState="Maximized">
+
+    <Window.DataContext>
+        <local:AdminViewModel />
+    </Window.DataContext>
+
+    <Window.Resources>
+        <convert:TruncateStringConverter x:Key="TruncateStringConverter"/>
+    </Window.Resources>
+
+    <Grid>
+        <TabControl Background="Bisque" x:Name="tabControl"  SelectionChanged="TabControl_SelectionChanged" Margin="0,10,0,0" >
+
+            <!-- Вкладка для Users -->
+            <TabItem Header="Users" Background="AliceBlue">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" >
+                    <Grid Margin="10,10,10,0" Height="794" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="53*" />
+                            <ColumnDefinition Width="256*"/>
+                            <ColumnDefinition Width="86*" />
+                            <ColumnDefinition Width="379*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions >
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Column="0" Grid.Row="0" Margin="10,10,10,10" Grid.ColumnSpan="2" >
+                            <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0,2,2,0" >
+                                <TextBlock Text="Логин" Margin="5" VerticalAlignment="Center" />
+                                <Button  Command="{Binding UsersViewModel.ResetSelectedUserCommand}" Width="25" 
+                                 DockPanel.Dock="Left" HorizontalAlignment="Right" Margin="0,0,0,10" Background="{x:Null}" BorderBrush="{x:Null}">
+                                    <Image Source="D:\BSTU3_1\CourseProject\Beauty_Salon\Beauty_Salon\Views\pic\update_icon.png"
+                                     Stretch="Uniform" Width="20" />
+                                </Button>
+                            </DockPanel>
+
+                            <TextBox Text="{Binding UsersViewModel.SelectedUser.User_Name}" Margin="5" Style="{StaticResource CustomTextBox}" Height="34" />
+
+                            <TextBlock Text="Пароль" Margin="5" />
+                            <TextBox Text="{Binding UsersViewModel.SelectedUser.Password_Hash}" Margin="5" Style="{StaticResource CustomTextBox}" Height="34" />
+
+                            <TextBlock Text="Описание" Margin="5" />
+                            <TextBox Text="{Binding UsersViewModel.SelectedUser.Description}"  Margin="5" Style="{StaticResource CustomTextBox}" Height="34" />
+
+                            <TextBlock Text="Роль" Margin="5" />
+                            <ComboBox 
+                         ItemsSource="{Binding UsersViewModel.Roles}" 
+                         SelectedValue="{Binding UsersViewModel.SelectedUser.Role_ID, Mode=TwoWay}" 
+                         SelectedValuePath="Role_ID" 
+                         DisplayMemberPath="Role_Name"
+                         BorderBrush="Black"
+                         Background="red"
+                         Margin="5" />
+
+                            <TextBlock Text="Статус" Margin="5" />
+                            <ComboBox 
+                     ItemsSource="{Binding UsersViewModel.Statuses}" 
+                     SelectedValue="{Binding UsersViewModel.SelectedUser.Status_ID}" 
+                     SelectedValuePath="Status_ID" 
+                     DisplayMemberPath="Status_Name" 
+                     Margin="5" />
+
+                            <TextBlock Text="Фото" Margin="5" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Image Source="{Binding UsersViewModel.SelectedUser.Image}" 
+                                        Height="150" 
+                                        Width="150" 
+                                        Margin="66,0,-41,0" 
+                                        Stretch="Uniform" 
+                                        Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" />
+                            </Grid>
+
+
+                            <Button Content="Добавить" Command="{Binding UsersViewModel.AddUserCommand}" Margin="5"  Style="{StaticResource AnimatedButtonStyle}" Height="34"/>
+                            <Button Content="Сохранить" Command="{Binding UsersViewModel.SaveUserCommand}" Margin="5" Style="{StaticResource AnimatedButtonStyle}"  Height="34"/>
+                            <Button Content="Удалить" Command="{Binding UsersViewModel.DeleteUserCommand}" Margin="5" Style="{StaticResource AnimatedButtonStyle}"  Height="34"/>
+
+                        </StackPanel>
+
+                        <DataGrid Grid.Column="2" Grid.Row="0" ItemsSource="{Binding UsersViewModel.Users}" 
+                 SelectedItem="{Binding UsersViewModel.SelectedUser}" 
+                 AutoGenerateColumns="False" Margin="10,10,10,10" IsReadOnly="True" Grid.ColumnSpan="2"
+                                 Style="{StaticResource DataGridStyle}"
+                                 RowStyle="{StaticResource DataGridRowStyle}"
+                                 AlternationCount="2">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="ID" Binding="{Binding User_ID}" IsReadOnly="True" Width="50" />
+                                <DataGridTextColumn Header="Статус" Binding="{Binding Status_ID}" />
+                                <DataGridTextColumn Header="Роль" Binding="{Binding Role_ID}" />
+                                <DataGridTextColumn Header="Логин" Binding="{Binding User_Name}" />
+                                <DataGridTextColumn Header="Фио" Binding="{Binding User_Fullname}" />
+                                <DataGridTextColumn Header="Почта" Binding="{Binding Email}" />
+                                <DataGridTextColumn Header="Телефон" Binding="{Binding Phone}" />
+                                <DataGridTextColumn Header="Описание" Binding="{Binding Description, Converter={StaticResource TruncateStringConverter}}" />
+                                <DataGridTextColumn Header="Дата создания" Binding="{Binding Create_Date}" />
+                                <DataGridTextColumn Header="Путь к фото" Binding="{Binding Image, Converter={StaticResource TruncateStringConverter}}" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </ScrollViewer>
+            </TabItem>
+
+
+
+
+            <!-- Вкладка для Roles -->
+            <TabItem Header="Roles">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="3*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Column="0" Margin="10">
+                        <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0,2,2,0" >
+                            <TextBlock Text="Название роли" Margin="5" VerticalAlignment="Center" />
+                            <Button  Command="{Binding RolesViewModel.ResetSelectedRoleCommand}" Width="25" 
+                             DockPanel.Dock="Left" HorizontalAlignment="Right" Margin="0,0,0,10" Background="{x:Null}" BorderBrush="{x:Null}">
+                                <Image Source="D:\BSTU3_1\CourseProject\Beauty_Salon\Beauty_Salon\Views\pic\update_icon.png"
+                             Stretch="Uniform" Width="20" OpacityMask="#FFE94040"/>
+                            </Button>
+                        </DockPanel>
+                        <TextBox Text="{Binding RolesViewModel.SelectedRole.Role_Name}" Margin="5" Style="{StaticResource CustomTextBox}" Height="34"/>
+
+                        <Button Content="Добавить" Command="{Binding RolesViewModel.AddRoleCommand}" Margin="5" Style="{StaticResource AnimatedButtonStyle}" Height="34"/>
+                        <Button Content="Удалить" Command="{Binding RolesViewModel.DeleteRoleCommand}" Margin="5" Style="{StaticResource AnimatedButtonStyle}" Height="34"/>
+                        <Button Content="Сохранить" Command="{Binding RolesViewModel.SaveRoleCommand}" Margin="5" Style="{StaticResource AnimatedButtonStyle}" Height="34"/>
+                    </StackPanel>
+
+                    <DataGrid Grid.Column="1" ItemsSource="{Binding RolesViewModel.Roles}" 
+               SelectedItem="{Binding RolesViewModel.SelectedRole}" 
+               AutoGenerateColumns="False" Margin="10,10,10,300" IsReadOnly="True"
+                                 Style="{StaticResource DataGridStyle}"
+                                 RowStyle="{StaticResource DataGridRowStyle}"
+                                 AlternationCount="2">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" Binding="{Binding Role_ID}" IsReadOnly="True" Width="50" />
+                            <DataGridTextColumn Header="Название" Binding="{Binding Role_Name}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Statuses">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="3*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Column="0" Margin="10">
+                        <TextBlock Text="Название статуса" Margin="5" />
+                        <TextBox Text="{Binding StatusesViewModel.SelectedStatus.Status_Name}" Margin="5" Style="{StaticResource CustomTextBox}" Height="34"/>
+
+                        <Button Content="Добавить" Command="{Binding StatusesViewModel.AddStatusCommand}" Margin="5" Style="{StaticResource AnimatedButtonStyle}" Height="34"/>
+                        <Button Content="Удалить" Command="{Binding StatusesViewModel.DeleteStatusCommand}" Margin="5" Style="{StaticResource AnimatedButtonStyle}" Height="34"/>
+                        <Button Content="Сохранить" Command="{Binding StatusesViewModel.SaveStatusCommand}" Margin="5" Style="{StaticResource AnimatedButtonStyle}" Height="34"/>
+                    </StackPanel>
+
+                    <DataGrid Grid.Column="1" ItemsSource="{Binding StatusesViewModel.Statuses}" 
+               SelectedItem="{Binding StatusesViewModel.SelectedStatus}" 
+               AutoGenerateColumns="False" Margin="10,10,10,300" IsReadOnly="True"
+                                 Style="{StaticResource DataGridStyle}"
+                                 RowStyle="{StaticResource DataGridRowStyle}"
+                                 AlternationCount="2">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" Binding="{Binding Status_ID}" IsReadOnly="True" Width="50" />
+                            <DataGridTextColumn Header="Название" Binding="{Binding Status_Name}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Specialists">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="3*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Column="0" Margin="10">
+                        <TextBlock Text="Имя специалиста" Margin="5" />
+                        <TextBox Text="{Binding SpecialistsViewModel.SelectedSpecialist.Specialist_Name}" Margin="5" Style="{StaticResource CustomTextBox}" Height="34"/>
+
+                        <TextBlock Text="Описание" Margin="5" />
+                        <TextBox Text="{Binding SpecialistsViewModel.SelectedSpecialist.Bio}" Margin="5" Style="{StaticResource CustomTextBox}" Height="34"/>
+
+                        <TextBlock Text="Фото" Margin="5" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Image Source="{Binding SpecialistsViewModel.SelectedSpecialist.Photo}" 
+                         Height="150" 
+                         Width="150" 
+                         Margin="5,0,20,0" 
+                         Stretch="Uniform" 
+                         Grid.Column="0" />
+                            <Button Content="Фото" 
+                         Command="{Binding SpecialistsViewModel.ChooseImageCommand}" 
+                         Margin="5,5,-89,5" Width="100" Height="50"
+                         Style="{StaticResource AnimatedButtonStyle}" 
+                         Background="Gray" 
+                         FontSize="14" 
+                         Grid.Column="1" />
+                        </Grid>
+
+                        <Button Content="Добавить" Command="{Binding SpecialistsViewModel.AddSpecialistCommand}" Margin="5" Style="{StaticResource AnimatedButtonStyle}" Height="34"/>
+                        <Button Content="Сохранить" Command="{Binding SpecialistsViewModel.SaveSpecialistCommand}" Margin="5" Style="{StaticResource AnimatedButtonStyle}" Height="34"/>
+                        <Button Content="Удалить" Command="{Binding SpecialistsViewModel.DeleteSpecialistCommand}" Margin="5" Style="{StaticResource AnimatedButtonStyle}" Height="34"/>
+                    </StackPanel>
+
+                    <DataGrid Grid.Column="1" ItemsSource="{Binding SpecialistsViewModel.Specialists}" 
+               SelectedItem="{Binding SpecialistsViewModel.SelectedSpecialist}" 
+               AutoGenerateColumns="False" Margin="10,10,10,108" IsReadOnly="True"
+                                 Style="{StaticResource DataGridStyle}"
+                                 RowStyle="{StaticResource DataGridRowStyle}"
+                                 AlternationCount="2">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" Binding="{Binding Specialists_ID}" IsReadOnly="True" Width="50" />
+                            <DataGridTextColumn Header="Имя" Binding="{Binding Specialist_Name}" />
+                            <DataGridTextColumn Header="Описание" Binding="{Binding Bio, Converter={StaticResource TruncateStringConverter}}" />
+                            <DataGridTextColumn Header="Оценка" Binding="{Binding Average_Grade}" />
+                            <DataGridTextColumn Header="Фото" Binding="{Binding Photo, Converter={StaticResource TruncateStringConverter}}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Reservations">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="3*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Column="0" Margin="10">
+                        <TextBlock Text="ID Регистрации" Margin="5" />
+                        <TextBox Text="{Binding ReservationsViewModel.DeletedReservation.Reservation_ID}" IsReadOnly="True" Margin="5" Style="{StaticResource CustomTextBox}" Height="34"/>
+
+                        <Button Content="Удалить" Command="{Binding ReservationsViewModel.DeleteReservationAdminCommand}" Margin="5" Style="{StaticResource AnimatedButtonStyle}" Height="34"/>
+                    </StackPanel>
+
+                    <DataGrid Grid.Column="1" ItemsSource="{Binding ReservationsViewModel.Reservations}" 
+               SelectedItem="{Binding ReservationsViewModel.DeletedReservation}" 
+               AutoGenerateColumns="False" Margin="10,10,10,108" IsReadOnly="True"
+                                 Style="{StaticResource DataGridStyle}"
+                                 RowStyle="{StaticResource DataGridRowStyle}"
+                                 AlternationCount="2">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" Binding="{Binding Reservation_ID}" IsReadOnly="True" Width="50" />
+                            <DataGridTextColumn Header="ID пользователя" Binding="{Binding User_ID}" />
+                            <DataGridTextColumn Header="ID специалиста" Binding="{Binding Specialist_ID}" />
+                            <DataGridTextColumn Header="ID услуги" Binding="{Binding Service_ID}" />
+                            <DataGridTextColumn Header="Дата" Binding="{Binding Appointment_Date}" />
+                            <DataGridTextColumn Header="Время" Binding="{Binding Appointment_Time}" />
+                            <DataGridTextColumn Header="Создание" Binding="{Binding Reserv_Date}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Grades">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="3*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Column="0" Margin="10">
+                        <TextBlock Text="ID Оценки" Margin="5" />
+                        <TextBox Text="{Binding GradesViewModel.SelectedGrade.Grades_ID}" Margin="5" Style="{StaticResource CustomTextBox}" IsReadOnly="True" Height="34"/>
+
+                        <Button Content="Удалить" Command="{Binding GradesViewModel.DeleteGradeCommand}" Margin="5" Style="{StaticResource AnimatedButtonStyle}" Height="34"/>
+                    </StackPanel>
+
+                    <DataGrid Grid.Column="1" ItemsSource="{Binding GradesViewModel.Grades}" 
+               SelectedItem="{Binding GradesViewModel.SelectedGrade}" 
+               AutoGenerateColumns="False" Margin="10,10,10,108" IsReadOnly="True"
+                                 Style="{StaticResource DataGridStyle}"
+                                 RowStyle="{StaticResource DataGridRowStyle}"
+                                 AlternationCount="2">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" Binding="{Binding Grades_ID}" IsReadOnly="True" Width="50" />
+                            <DataGridTextColumn Header="ID пользователя" Binding="{Binding User_ID}" />
+                            <DataGridTextColumn Header="ID специалиста" Binding="{Binding Specialists_ID}" />
+                            <DataGridTextColumn Header="Оценка" Binding="{Binding Grade}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Services">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" >
+                    <Grid Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="3*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Column="0" Margin="10">
+                            <TextBlock Text="Название услуги" Margin="5" />
+                            <TextBox Text="{Binding ServicesViewModel.SelectedService.Service_Name}" Margin="5" Style="{StaticResource CustomTextBox}" Height="34"/>
+
+                            <TextBlock Text="Описание" Margin="5" />
+                            <TextBox Text="{Binding ServicesViewModel.SelectedService.Description}" Margin="5" Style="{StaticResource CustomTextBox}" Height="34"/>
+
+                            <TextBlock Text="Цена" Margin="5" />
+                            <TextBox Text="{Binding ServicesViewModel.SelectedService.Price}" Margin="5" Style="{StaticResource CustomTextBox}" Height="34"/>
+
+                            <TextBlock Text="Тип услуги" Margin="5" />
+                            <TextBox Text="{Binding ServicesViewModel.SelectedService.Type}" Margin="5" Style="{StaticResource CustomTextBox}" Height="34"/>
+
+                            <TextBlock Text="Путь к изображению" Margin="5" />
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Image Source="{Binding ServicesViewModel.SelectedService.ImagePath}" 
+                                     Height="150" 
+                                    Width="150" 
+                                    Margin="5,0,20,0" 
+                                    Stretch="Uniform" 
+                                    Grid.Column="0" />
+                                <Button Content="Фото" 
+                                    Command="{Binding ServicesViewModel.ChooseImageCommand}" 
+                                    Margin="5,5,-89,5" Width="100" Height="50"
+                                    Style="{StaticResource AnimatedButtonStyle}" 
+                                    Background="Gray" 
+                                    FontSize="14" 
+                                    Grid.Column="1" />
+                            </Grid>
+
+                            <Button Content="Добавить" Command="{Binding ServicesViewModel.AddServiceCommand}" Margin="5" Style="{StaticResource AnimatedButtonStyle}" Height="34"/>
+                            <Button Content="Сохранить" Command="{Binding ServicesViewModel.SaveServiceCommand}" Margin="5" Style="{StaticResource AnimatedButtonStyle}" Height="34"/>
+                            <Button Content="Удалить" Command="{Binding ServicesViewModel.DeleteServiceCommand}" Margin="5" Style="{StaticResource AnimatedButtonStyle}" Height="34"/>
+                        </StackPanel>
+
+                        <DataGrid Grid.Column="1" ItemsSource="{Binding ServicesViewModel.Services}" 
+                            SelectedItem="{Binding ServicesViewModel.SelectedService}" 
+                            AutoGenerateColumns="False" Margin="10,10,10,108" IsReadOnly="True"
+                     Style="{StaticResource DataGridStyle}"
+                     RowStyle="{StaticResource DataGridRowStyle}"
+                     AlternationCount="2">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="ID" Binding="{Binding Service_ID}" IsReadOnly="True" Width="50" />
+                                <DataGridTextColumn Header="Название" Binding="{Binding Service_Name}" />
+                                <DataGridTextColumn Header="Описание" Binding="{Binding Description, Converter={StaticResource TruncateStringConverter}}" />
+                                <DataGridTextColumn Header="Цена" Binding="{Binding Price}" />
+                                <DataGridTextColumn Header="Тип" Binding="{Binding Type}" />
+                                <DataGridTextColumn Header="Фото" Binding="{Binding ImagePath, Converter={StaticResource TruncateStringConverter}}" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem Header="Favorites">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" >
+                    <Grid Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="3*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Column="0" Margin="10">
+                            <TextBlock Text="ID избранного" Margin="5" />
+                            <TextBox Text="{Binding FavoritesViewModel.SelectedFavorite.Favorite_ID}" IsReadOnly="True" Margin="5" Style="{StaticResource CustomTextBox}" Height="34"/>
+
+                            <Button Content="Удалить" Command="{Binding FavoritesViewModel.DeleteFavoriteCommand}" Margin="5" Style="{StaticResource AnimatedButtonStyle}" Height="34"/>
+                        </StackPanel>
+
+                        <DataGrid Grid.Column="1" ItemsSource="{Binding FavoritesViewModel.Favorites}" 
+                            SelectedItem="{Binding FavoritesViewModel.SelectedFavorite}" 
+                            AutoGenerateColumns="False" Margin="10,10,10,108" IsReadOnly="True"
+                                    Style="{StaticResource DataGridStyle}"
+                                    RowStyle="{StaticResource DataGridRowStyle}"
+                                    AlternationCount="2">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="ID" Binding="{Binding Favorite_ID}" IsReadOnly="True" Width="50" />
+                                <DataGridTextColumn Header="ID пользователя" Binding="{Binding User_ID}" />
+                                <DataGridTextColumn Header="ID услуги" Binding="{Binding Service_ID}" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </ScrollViewer>
+            </TabItem>
+
+        </TabControl>
+
+        <Button Content="Выход" HorizontalAlignment="Right" VerticalAlignment="Top"  Width="65" Height="28" FontSize="16"
+                Style="{StaticResource AnimatedButtonStyle}" Background="gray" RenderTransformOrigin="0.5,0.5"
+                Click="Back_ButtonClick" Margin="0,0,10,0"/>
+    </Grid>
+
+
+</Window>

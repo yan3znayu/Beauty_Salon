@@ -1,0 +1,48 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Стиль для ползунка (Thumb) -->
+    <Style TargetType="Thumb" x:Key="CustomThumbStyle">
+        <Setter Property="Background" Value="Black"/>
+        <Setter Property="BorderBrush" Value="Gray"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Width" Value="16"/>
+        <Setter Property="Height" Value="16"/>
+    </Style>
+
+    <!-- Стиль для Slider -->
+    <Style TargetType="Slider" x:Key="CustomSliderStyle">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Slider">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        
+                        <!-- Трек (Track) -->
+                        <Track x:Name="PART_Track" Grid.Row="1"
+                               IsDirectionReversed="{TemplateBinding IsDirectionReversed}"
+                               Maximum="{TemplateBinding Maximum}"
+                               Minimum="{TemplateBinding Minimum}"
+                               Value="{TemplateBinding Value}">
+                            <Track.DecreaseRepeatButton>
+                                <!-- Задний трек (левая часть) -->
+                                <RepeatButton Background="LightYellow" Command="Slider.DecreaseLarge" Style="{x:Null}" />
+                            </Track.DecreaseRepeatButton>
+                            <Track.Thumb>
+                                <!-- Ползунок -->
+                                <Thumb Style="{StaticResource CustomThumbStyle}" />
+                            </Track.Thumb>
+                            <Track.IncreaseRepeatButton>
+                                <!-- Передний трек (правая часть) -->
+                                <RepeatButton Background="LightGray" Command="Slider.IncreaseLarge" Style="{x:Null}" />
+                            </Track.IncreaseRepeatButton>
+                        </Track>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
